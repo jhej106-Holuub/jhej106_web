@@ -1,0 +1,26 @@
+{
+  "name": "localhost-diaries",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "build": "node scripts/build.mjs",
+    "dev": "node scripts/serve.mjs",
+    "serve": "node scripts/serve.mjs",
+    "test": "node --test",
+    "check": "node --test",
+    "check:sql": "node scripts/check-sql.mjs"
+  },
+  "dependencies": {
+    "@supabase/supabase-js": "2.92.0",
+    "esbuild": "0.27.2",
+    "highlight.js": "11.11.1",
+    "markdown-it": "14.1.1"
+  },
+  "devDependencies": {
+    "@electric-sql/pglite": "0.3.15"
+  }
+}

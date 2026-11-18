@@ -1,0 +1,4 @@
+project_id = "localhost-diaries"
+
+[functions.diaries]
+verify_jwt = false

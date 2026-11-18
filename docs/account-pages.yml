@@ -1,0 +1,47 @@
+# Copy as .github/workflows/pages.yml in the separate account repository.
+# Set PUBLIC_URL, ACCOUNT_URL, SUPABASE_URL and SUPABASE_PUBLISHABLE_KEY in that repository.
+name: Deploy Localhost Diaries account pages
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+permissions:
+  contents: read
+concurrency:
+  group: localhost-diaries-account-pages
+  cancel-in-progress: false
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v5
+        with:
+          node-version: '22'
+          cache: npm
+      - uses: actions/configure-pages@v5
+      - run: npm ci --no-audit --no-fund
+      - env:
+          BASE_PATH: ${{ vars.BASE_PATH }}
+          PUBLIC_URL: ${{ vars.PUBLIC_URL }}
+          ACCOUNT_URL: ${{ vars.ACCOUNT_URL }}
+          SUPABASE_URL: ${{ vars.SUPABASE_URL }}
+          SUPABASE_PUBLISHABLE_KEY: ${{ vars.SUPABASE_PUBLISHABLE_KEY }}
+        run: |
+          npm run build -- --accounts-only
+          node scripts/check-links.mjs
+      - uses: actions/upload-pages-artifact@v4
+        with:
+          path: dist
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.pages.outputs.page_url }}
+    steps:
+      - id: pages
+        uses: actions/deploy-pages@v4
